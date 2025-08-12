@@ -1,52 +1,46 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Canvas/Color.h" // Подключаем наш заголовочный файл с цветом
+#include "Canvas/SFMLCanvas.h"
 
-int main()
-{
+void DrawOnAnyCanvas(gfx::ICanvas& canvas) {
+    // Рисуем красный прямоугольник с помощью линий
+    canvas.SetColor(gfx::Color::FromString("#FF0000"));
+    canvas.MoveTo(200, 200);
+    canvas.LineTo(400, 200);
+    canvas.LineTo(400, 300);
+    canvas.LineTo(200, 300);
+    canvas.LineTo(200, 200);
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My Shapes Program");
+    canvas.SetColor(gfx::Color::FromString("#0000FF"));
+    canvas.DrawEllipse(500, 400, 80, 40);
 
-    // 1. Создаем цвет, используя ваш класс и парсер
-    gfx::Color myOrange = gfx::Color::FromString("#FF8C00"); // Темно-оранжевый
+    canvas.SetColor(gfx::Color::FromString("#FFFFFF"));
+    canvas.DrawText(50, 50, 24, "Drawing via ICanvas interface!");
+}
 
-    sf::CircleShape circle(50.f);
-    circle.setPosition(100, 100);
+int main() {
+    sf::RenderWindow window(
+        sf::RenderWindow(sf::VideoMode(800, 600), "Shapes Program - ICanvas Demo"));
 
-    // 2. Используем наш объект gfx::Color напрямую с SFML!
-    // Компилятор автоматически вызовет оператор преобразования.
-    circle.setFillColor(myOrange);
+    sf::Font font;
+    if (!font.loadFromFile("fonts/monogram.ttf")) {
+        std::cerr << "Error loading font" << std::endl;
+        return -1;
+    }
 
+    // Создаем конкретную реализацию холста для SFML
+    gfx::SFMLCanvas canvas(window, font);
 
-
-    while (window.isOpen())
-    {
-        // Обработка событий (нажатия клавиш, закрытие окна)
+    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            
-            // Сохраняем скриншот по нажатию на 'S'
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
-            {
-                sf::Texture texture;
-                texture.create(window.getSize().x, window.getSize().y);
-                texture.update(window);
-                if (texture.copyToImage().saveToFile("screenshot.png"))
-                {
-                    std::cout << "Screenshot saved to screenshot.png" << std::endl;
-                }
-            }
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) window.close();
         }
 
- 
-        window.clear(sf::Color::Black); 
+        window.clear(sf::Color::Black);
 
-        window.draw(circle);
-
+        DrawOnAnyCanvas(canvas);
 
         window.display();
     }
