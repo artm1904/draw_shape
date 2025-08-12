@@ -10,10 +10,14 @@ namespace shapes {
 
 class Shape {
    public:
-    Shape(std::string Id, gfx::Color Color, std::unique_ptr<IShapeStrategy> Strategy)
-        : _Id(Id), _Color(std::move(Color)), _Strategy(std::move(Strategy)) {}
+    Shape(std::string id, gfx::Color color, std::unique_ptr<IShapeStrategy> strategy)
+        : _Id(id), _Color(std::move(color)), _Strategy(std::move(strategy)) {}
 
     void Draw(sfx::ICanvas& canvas) const { _Strategy->Draw(canvas); }
+
+    void SetStrategy (std::unique_ptr<IShapeStrategy> strategy ) {
+        _Strategy = std::move(strategy);
+    }
 
    private:
     std::string _Id;
