@@ -10,12 +10,16 @@ class RectangleStrategy : public IShapeStrategy {
         : _X(x), _Y(y), _Width(width), _Height(height) {}
 
     void Draw(gfx::ICanvas& canvas) const override {
-        canvas.DrawRectangle(_X, _Y, _Width, _Height);
+        canvas.MoveTo(_X, _Y);
+        canvas.LineTo(_X + _Width, _Y);
+        canvas.LineTo(_X + _Width, _Y + _Height);
+        canvas.LineTo(_X, _Y + _Height);
+        canvas.LineTo(_X, _Y);
     }
 
     std::string GetTypeName() const override { return "Rectangle"; }
 
-    std::string GetParametrsInfo() const override {
+    std::string GetParametersInfo() const override {
         return (std::to_string(_X) + " " + std::to_string(_Y) + " " + std::to_string(_Width) + " " +
                 std::to_string(_Height));
     }

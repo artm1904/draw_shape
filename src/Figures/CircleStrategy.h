@@ -8,11 +8,11 @@ class CircleStrategy : public IShapeStrategy {
    public:
     CircleStrategy(double x, double y, double radius) : _X(x), _Y(y), _Radius(radius) {}
 
-    void Draw(gfx::ICanvas& canvas) const override { canvas.DrawCircle(_X, _Y, _Radius); }
+    void Draw(gfx::ICanvas& canvas) const override { canvas.DrawEllipse(_X, _Y, _Radius, _Radius); }
 
     std::string GetTypeName() const override { return "Circle"; }
 
-    std::string GetParametrsInfo() const override {
+    std::string GetParametersInfo() const override {
         return (std::to_string(_X) + " " + std::to_string(_Y) + " " + std::to_string(_Radius));
     }
 

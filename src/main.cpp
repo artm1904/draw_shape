@@ -1,7 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 #include "Canvas/SFMLCanvas.h"
+#include "Figures/CircleStrategy.h"
+#include "Shape/Shape.h"
 
 void DrawOnAnyCanvas(gfx::ICanvas& canvas) {
     // Рисуем красный прямоугольник с помощью линий
@@ -29,6 +33,15 @@ int main() {
         return -1;
     }
 
+    std::vector<shapes::Shape> picture;
+
+    picture.emplace_back("sh1",
+                         gfx::Color::FromString("#FF0000"),  // Красный
+                         std::make_unique<CircleStrategy>(200, 200, 50));
+    picture.emplace_back("sh2",
+                         gfx::Color::FromString("#00FF00"),  // Зеленый
+                         std::make_unique<CircleStrategy>(450, 350, 80));
+
     // Создаем конкретную реализацию холста для SFML
     gfx::SFMLCanvas canvas(window, font);
 
@@ -39,8 +52,11 @@ int main() {
         }
 
         window.clear(sf::Color::Black);
+        for (const auto& shape : picture) {
+            shape.Draw(canvas);
+        }
 
-        DrawOnAnyCanvas(canvas);
+        // DrawOnAnyCanvas(canvas);
 
         window.display();
     }
