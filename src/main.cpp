@@ -1,10 +1,15 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include "Canvas/SFMLCanvas.h"
+#include "Commands/CommandParser.h"
 #include "Figures/CircleStrategy.h"
+#include "Figures/RectangleStrategy.h"
+#include "Figures/TriangleStrategy.h"
+#include "Shape/Picture.h"
 #include "Shape/Shape.h"
 
 void DrawOnAnyCanvas(gfx::ICanvas& canvas) {
@@ -33,17 +38,20 @@ int main() {
         return -1;
     }
 
-    std::vector<shapes::Shape> picture;
-
-    picture.emplace_back("sh1",
-                         gfx::Color::FromString("#FF0000"),  // Красный
-                         std::make_unique<CircleStrategy>(200, 200, 50));
-    picture.emplace_back("sh2",
-                         gfx::Color::FromString("#00FF00"),  // Зеленый
-                         std::make_unique<CircleStrategy>(450, 350, 80));
-
     // Создаем конкретную реализацию холста для SFML
     gfx::SFMLCanvas canvas(window, font);
+    Picture picture;
+    CommandParser parser(picture, canvas);
+
+    // Главный цикл теперь обрабатывает команды из консоли
+    std::thread commandThread([&]() {
+        std::string line;
+        while (std::cout << "> " && std::getline(std::cin, line)) {
+            if (auto command = parser.ParseCommand(line); command != nullptr) {
+                command->Execute();
+            }
+        }
+    });
 
     while (window.isOpen()) {
         sf::Event event;
@@ -51,15 +59,13 @@ int main() {
             if (event.type == sf::Event::Closed) window.close();
         }
 
-        window.clear(sf::Color::Black);
-        for (const auto& shape : picture) {
-            shape.Draw(canvas);
-        }
+        window.clear(sf::Color::White);
 
+       
         // DrawOnAnyCanvas(canvas);
 
         window.display();
     }
-
+    commandThread.detach();  // Отсоединяем поток при выходе
     return 0;
 }
