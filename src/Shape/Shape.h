@@ -18,7 +18,14 @@ class Shape {
         _Strategy->Draw(canvas);
     }
 
+    std::string GetParametersInfo() const {
+        return _Strategy->GetTypeName() + " " + _Id + " " + _Color.ToString() + " " +
+               _Strategy->GetParametersInfo();
+    }
+
     void SetStrategy(std::unique_ptr<IShapeStrategy> strategy) { _Strategy = std::move(strategy); }
+
+    std::string GetId() const { return _Id; }
 
    private:
     std::string _Id;
