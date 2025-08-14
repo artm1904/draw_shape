@@ -1,6 +1,9 @@
-#pragma once 
+#pragma once
 
+#include "CommandImpl/AddShapeCommand.h"
+#include "CommandImpl/DrawPictureCommand.h"
+#include "CommandImpl/ListShapesCommand.h"
+#include "CommandImpl/MoveShapeCommand.h"
+#include "CommandImpl/MovePictureCommand.h"
+#include "CommandImpl/DeleteShapeCommand.h"
 
-#include "ListShapesCommand.h"
-#include "AddShapeCommand.h"
-#include "DrawPictureCommand.h"

@@ -40,7 +40,35 @@ class CommandParser {
                 return nullptr;
             }
         };
-        
+
+        _Commands["DeleteShape"] = [this](std::istream& input) -> std::unique_ptr<ICommand> {
+            std::string id;
+            if (!(input >> id)) {
+                std::cerr << "Error: Not enough arguments for DeleteShape." << std::endl;
+                return nullptr;
+            }
+            return std::make_unique<DeleteShapeCommand>(_Picture, id);
+        };
+
+        _Commands["MoveShape"] = [this](std::istream& input) -> std::unique_ptr<ICommand> {
+            std::string id;
+            double dx, dy;
+            if (!(input >> id >> dx >> dy)) {
+                std::cerr << "Error: Not enough arguments for MoveShape." << std::endl;
+                return nullptr;
+            }
+            return std::make_unique<MoveShapeCommand>(_Picture, id, dx, dy);
+        };
+
+        _Commands["MovePicture"] = [this](std::istream& input) -> std::unique_ptr<ICommand> {
+            double dx, dy;
+            if (input >> dx >> dy) {
+                return std::make_unique<MovePictureCommand>(_Picture, dx, dy);
+            }
+            std::cerr << "Error: Not enough arguments for MovePicture." << std::endl;
+            return nullptr;
+        };
+
         _Commands["DrawPicture"] = [this](std::istream& input) {
             return std::make_unique<DrawPictureCommand>(_Picture, _Canvas);
         };
