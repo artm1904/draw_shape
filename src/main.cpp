@@ -1,36 +1,18 @@
 #include <SFML/Graphics.hpp>
+#include <atomic>
 #include <iostream>
 #include <memory>
+#include <mutex>
+#include <queue>
 #include <thread>
-#include <vector>
 
 #include "Canvas/SFMLCanvas.h"
 #include "Commands/CommandParser.h"
-#include "Figures/CircleStrategy.h"
-#include "Figures/RectangleStrategy.h"
-#include "Figures/TriangleStrategy.h"
+#include "Commands/ICommand.h"
 #include "Shape/Picture.h"
-#include "Shape/Shape.h"
-
-void DrawOnAnyCanvas(gfx::ICanvas& canvas) {
-    // Рисуем красный прямоугольник с помощью линий
-    canvas.SetColor(gfx::Color::FromString("#FF0000"));
-    canvas.MoveTo(200, 200);
-    canvas.LineTo(400, 200);
-    canvas.LineTo(400, 300);
-    canvas.LineTo(200, 300);
-    canvas.LineTo(200, 200);
-
-    canvas.SetColor(gfx::Color::FromString("#0000FF"));
-    canvas.DrawEllipse(500, 400, 80, 40);
-
-    canvas.SetColor(gfx::Color::FromString("#FFFFFF"));
-    canvas.DrawText(50, 50, 24, "Drawing via ICanvas interface!");
-}
 
 int main() {
-    sf::RenderWindow window(
-        sf::RenderWindow(sf::VideoMode(800, 600), "Shapes Program - ICanvas Demo"));
+    sf::RenderWindow window(sf::VideoMode(800, 600), "Shapes Program");
 
     sf::Font font;
     if (!font.loadFromFile("fonts/monogram.ttf")) {
@@ -38,17 +20,29 @@ int main() {
         return -1;
     }
 
-    // Создаем конкретную реализацию холста для SFML
-    gfx::SFMLCanvas canvas(window, font);
+    // Создаем текстуру, на которой будет происходить "накопительное" рисование
+    sf::RenderTexture canvasTexture;
+    canvasTexture.create(window.getSize().x, window.getSize().y);
+    canvasTexture.clear(sf::Color::White);  // Начальный фон - белый
+
+    // Наш холст теперь рисует на текстуре, а не прямо в окне
+    gfx::SFMLCanvas canvas(canvasTexture, font);
     Picture picture;
     CommandParser parser(picture, canvas);
+
+    std::queue<std::unique_ptr<ICommand>> commandQueue;
+    std::mutex queueMutex;
+    std::atomic<bool> done = false;
 
     // Главный цикл теперь обрабатывает команды из консоли
     std::thread commandThread([&]() {
         std::string line;
-        while (std::cout << "> " && std::getline(std::cin, line)) {
-            if (auto command = parser.ParseCommand(line); command != nullptr) {
-                command->Execute();
+        while (!done && std::cout << "> " && std::getline(std::cin, line)) {
+            if (line.empty()) continue;
+
+            if (auto command = parser.ParseCommand(line)) {
+                std::lock_guard<std::mutex> lock(queueMutex);
+                commandQueue.push(std::move(command));
             }
         }
     });
@@ -56,16 +50,30 @@ int main() {
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) window.close();
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
         }
 
-        window.clear(sf::Color::White);
+        // Обрабатываем команды из очереди в главном потоке
+        {
+            std::lock_guard<std::mutex> lock(queueMutex);
+            while (!commandQueue.empty()) {
+                auto command = std::move(commandQueue.front());
+                commandQueue.pop();
+                command->Execute();  // Безопасно выполняем команду здесь
+            }
+        }
 
-       
-        // DrawOnAnyCanvas(canvas);
+        // Отображаем результат
+        window.clear();
+        canvasTexture.display();  // Завершаем рисование на текстуре
+        sf::Sprite canvasSprite(canvasTexture.getTexture());
+        window.draw(canvasSprite);  // Рисуем текстуру в окне
 
         window.display();
     }
-    commandThread.detach();  // Отсоединяем поток при выходе
+    done = true;
+    commandThread.detach();  // В учебном проекте detach допустим для простоты завершения
     return 0;
 }
