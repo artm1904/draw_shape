@@ -26,7 +26,7 @@ class SFMLCanvas : public ICanvas {
             sf::Vertex(m_currentPosition, m_currentColor),
             sf::Vertex(sf::Vector2f(static_cast<float>(x), static_cast<float>(y)), m_currentColor)};
         m_target.draw(line, 2, sf::Lines);
-        MoveTo(x, y);  // Обновляем текущую позицию
+        MoveTo(x, y);
     }
 
     void DrawEllipse(double cx, double cy, double rx, double ry) override {
