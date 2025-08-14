@@ -7,7 +7,15 @@
 
 class Picture {
    public:
-    void AddShape(shapes::Shape shape) { _Shapes.push_back(std::move(shape)); }
+    void AddShape(shapes::Shape newShape) {
+        for (const auto& existingShape : _Shapes) {
+            if (existingShape.GetId() == newShape.GetId()) {
+                std::cerr << "Error: Shape with id '" << newShape.GetId() << "' already exists." << std::endl;
+                return;
+            }
+        }
+        _Shapes.push_back(std::move(newShape));
+    }
 
     void MoveShape(const std::string& id, double dx, double dy) {
         for (auto& shape : _Shapes) {
