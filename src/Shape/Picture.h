@@ -10,26 +10,12 @@ class Picture {
     void AddShape(shapes::Shape newShape) {
         for (const auto& existingShape : _Shapes) {
             if (existingShape.GetId() == newShape.GetId()) {
-                std::cerr << "Error: Shape with id '" << newShape.GetId() << "' already exists." << std::endl;
+                std::cerr << "Error: Shape with id '" << newShape.GetId() << "' already exists."
+                          << std::endl;
                 return;
             }
         }
         _Shapes.push_back(std::move(newShape));
-    }
-
-    void MoveShape(const std::string& id, double dx, double dy) {
-        for (auto& shape : _Shapes) {
-            if (shape.GetId() == id) {
-                //shape.Move(dx, dy);
-                break;
-            }
-        }
-    }
-
-    void MovePicture(double dx, double dy) {
-        for (auto& shape : _Shapes) {
-            //shape.Move(dx, dy);
-        }
     }
 
     void DeleteShape(const std::string& id) {
@@ -37,6 +23,21 @@ class Picture {
             std::remove_if(_Shapes.begin(), _Shapes.end(),
                            [id](const shapes::Shape& shape) { return shape.GetId() == id; }),
             _Shapes.end());
+    }
+
+    void MoveShape(const std::string& id, double dx, double dy) {
+        for (auto& shape : _Shapes) {
+            if (shape.GetId() == id) {
+                shape.Move(dx, dy);
+                break;
+            }
+        }
+    }
+
+    void MovePicture(double dx, double dy) {
+        for (auto& shape : _Shapes) {
+            shape.Move(dx, dy);
+        }
     }
 
     void ListShapes() const {
