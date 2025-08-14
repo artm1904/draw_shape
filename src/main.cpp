@@ -53,6 +53,19 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            
+            // Сохраняем скриншот по нажатию на 'S'
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::S)
+            {
+                sf::Texture texture;
+                texture.create(window.getSize().x, window.getSize().y);
+                texture.update(window);
+                if (texture.copyToImage().saveToFile("screenshot.png"))
+                {
+                    std::cout << "Screenshot saved to screenshot.png" << std::endl;
+                }
+            }
+
         }
 
         // Обрабатываем команды из очереди в главном потоке
@@ -74,6 +87,6 @@ int main() {
         window.display();
     }
     done = true;
-    commandThread.detach();  // В учебном проекте detach допустим для простоты завершения
+    commandThread.join();  
     return 0;
 }
