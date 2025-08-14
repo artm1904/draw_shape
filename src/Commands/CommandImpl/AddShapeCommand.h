@@ -3,11 +3,11 @@
 #include <memory>
 #include <string>
 
-#include "../Canvas/Color.h"
-#include "../Figures/IShapeStrategy.h"
-#include "../Shape/Picture.h"
-#include "../Shape/Shape.h"
-#include "ICommand.h"
+#include "../../Canvas/Color.h"
+#include "../../Figures/IShapeStrategy.h"
+#include "../../Shape/Picture.h"
+#include "../../Shape/Shape.h"
+#include "../ICommand.h"
 
 class AddShapesCommand : public ICommand {
    public:

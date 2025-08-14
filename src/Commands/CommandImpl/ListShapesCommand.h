@@ -2,9 +2,11 @@
 
 #include <iostream>
 
-#include "../Canvas/ICanvas.h"
-#include "../Shape/Picture.h"
-#include "ICommand.h"
+#include "../../Canvas/Color.h"
+#include "../../Figures/IShapeStrategy.h"
+#include "../../Shape/Picture.h"
+#include "../../Shape/Shape.h"
+#include "../ICommand.h"
 
 class ListCommand : public ICommand {
    public:
