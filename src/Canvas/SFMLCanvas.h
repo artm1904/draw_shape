@@ -11,6 +11,10 @@ class SFMLCanvas : public ICanvas {
     // Конструктор принимает цель для рисования (окно) и шрифт
     SFMLCanvas(sf::RenderTarget& target, const sf::Font& font) : m_target(target), m_font(font) {}
 
+    void Clear(Color color) override {
+        m_target.clear(color);
+    }
+
     void SetColor(Color c) override {
         // Используем неявное преобразование gfx::Color в sf::Color
         m_currentColor = c;
@@ -53,3 +57,5 @@ class SFMLCanvas : public ICanvas {
 };
 
 }  // namespace gfx
+
+

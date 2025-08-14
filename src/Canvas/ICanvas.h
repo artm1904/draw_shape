@@ -10,6 +10,7 @@ class ICanvas {
    public:
     virtual ~ICanvas() = default;
 
+    virtual void Clear(Color color) = 0;
     virtual void SetColor(Color c) = 0;
     virtual void MoveTo(double x, double y) = 0;
     virtual void LineTo(double x, double y) = 0;
