@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 
 add_executable(shape_executable
     main.cpp
+    Figures/ShapeFactory.cpp
    
 )
 
