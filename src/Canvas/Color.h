@@ -3,7 +3,11 @@
 #include <SFML/Graphics/Color.hpp>
 #include <charconv>
 #include <stdexcept>
+#include <sstream>
+#include <iomanip>
 #include <string>
+#include <cstdint>
+
 
 namespace gfx {
 
@@ -42,7 +46,12 @@ struct Color {
     }
 
     std::string ToString() const {
-        return "#" + std::to_string(R) + std::to_string(G) + std::to_string(B);
+        std::stringstream ss;
+        ss << '#' << std::hex << std::setfill('0')
+           << std::setw(2) << static_cast<int>(R)
+           << std::setw(2) << static_cast<int>(G)
+           << std::setw(2) << static_cast<int>(B);
+        return ss.str();
     }
 
     // Оператор преобразования в sf::Color
