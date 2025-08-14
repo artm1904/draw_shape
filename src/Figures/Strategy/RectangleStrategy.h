@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "IShapeStrategy.h"
+#include "../IShapeStrategy.h"
 
 class RectangleStrategy : public IShapeStrategy {
    public:

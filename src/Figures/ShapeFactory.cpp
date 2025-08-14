@@ -1,8 +1,8 @@
 #include "ShapeFactory.h"
 
-#include "CircleStrategy.h"
-#include "RectangleStrategy.h"
-#include "TriangleStrategy.h"
+#include "Strategy/CircleStrategy.h"
+#include "Strategy/RectangleStrategy.h"
+#include "Strategy/TriangleStrategy.h"
 
 ShapeFactory::ShapeFactory() {
     _StrategyFactories["circle"] = [](std::istream& args) -> std::unique_ptr<IShapeStrategy> {
