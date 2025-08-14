@@ -10,6 +10,8 @@ class CircleStrategy : public IShapeStrategy {
 
     void Draw(gfx::ICanvas& canvas) const override { canvas.DrawEllipse(_X, _Y, _Radius, _Radius); }
 
+    void Move(double dx, double dy) override { _X += dx; _Y += dy; }
+
     std::string GetTypeName() const override { return "Circle"; }
 
     std::string GetParametersInfo() const override {

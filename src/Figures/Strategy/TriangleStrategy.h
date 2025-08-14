@@ -16,6 +16,15 @@ class TriangleStrategy : public IShapeStrategy {
         canvas.LineTo(_X1, _Y1);
     }
 
+    void Move(double dx, double dy) override
+    {
+        _X1 += dx;
+        _Y1 += dy;
+        _X2 += dx;
+        _Y2 += dy;
+        _X3 += dx;
+        _Y3 += dy;
+    }
     std::string GetTypeName() const override { return "Triangle"; }
 
     std::string GetParametersInfo() const override {

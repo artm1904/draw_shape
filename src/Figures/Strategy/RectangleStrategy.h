@@ -17,6 +17,8 @@ class RectangleStrategy : public IShapeStrategy {
         canvas.LineTo(_X, _Y);
     }
 
+    void Move(double dx, double dy) override { _X += dx; _Y += dy; }
+
     std::string GetTypeName() const override { return "Rectangle"; }
 
     std::string GetParametersInfo() const override {

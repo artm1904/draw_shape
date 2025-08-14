@@ -16,6 +16,8 @@ class LineStrategy : public IShapeStrategy {
         
     }
 
+    void Move(double dx, double dy) override { _X1 += dx; _Y1 += dy; _X2 += dx; _Y2 += dy; }
+
     std::string GetTypeName() const override { return "Line"; }
 
     std::string GetParametersInfo() const override {

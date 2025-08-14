@@ -11,11 +11,13 @@ class TextStrategy : public IShapeStrategy {
 
     void Draw(gfx::ICanvas& canvas) const override { canvas.DrawText(_X, _Y, _FontSize, _Text); }
 
+    void Move(double dx, double dy) override { _X += dx; _Y += dy; }
+
     std::string GetTypeName() const override { return "Text"; }
 
     std::string GetParametersInfo() const override {
         return (std::to_string(_X) + " " + std::to_string(_Y) + " " + std::to_string(_FontSize) +
-                " " + std::to_string(_Text));
+                " " + _Text);
     }
 
     std::unique_ptr<IShapeStrategy> Clone() const override {
