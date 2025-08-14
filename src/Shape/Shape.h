@@ -18,6 +18,8 @@ class Shape {
         _Strategy->Draw(canvas);
     }
 
+    void Move(double dx, double dy) { _Strategy->Move(dx, dy); }
+
     std::string GetParametersInfo() const {
         return _Strategy->GetTypeName() + " " + _Id + " " + _Color.ToString() + " " +
                _Strategy->GetParametersInfo();
